@@ -40,6 +40,20 @@
 
             context.strokeStyle = '#fff'
             context.stroke()
+
+            //flame for engine
+            if (this.engineOn) {
+                const fireYPos = this.size.height / 2 + 5
+                const fireXPos = this.size.width * 0.25
+                context.beginPath()
+                context.moveTo(-fireXPos, fireYPos)
+                context.lineTo(fireXPos, fireYPos)
+                context.lineTo(0, fireYPos + Math.random() * 50)
+                context.lineTo(-fireXPos, fireYPos)
+                context.closePath()
+                context.fillStyle = 'orange'
+                context.fill()
+            }
             context.restore()
             //triangle
         }
@@ -50,9 +64,14 @@
             //change the position based on velocity
             this.position.x += this.velocity.x
             this.position.y += this.velocity.y
+            //modulus will move spaceship to other side of screen
+            this.position.x = (canvas.width + this.position.x) % canvas.width
+            this.position.y = (canvas.height + this.position.y) % canvas.height
+
             //turning
             if (this.rotatingLeft) this.angle -= degToRad
             if (this.rotatingRight) this.angle += degToRad
+
             //acceleration
             if (this.engineOn) {
                 this.velocity.x += (THRUST / 100) * Math.sin(this.angle)
@@ -75,7 +94,6 @@
     }
 
     function draw() {
-        console.log('Drawing')
         //clear canvas
         context.fillStyle = '#000'
         context.fillRect(0, 0, canvas.width, canvas.height)
