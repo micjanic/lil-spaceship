@@ -17,6 +17,8 @@
             this.engineOn = false
             this.rotatingLeft = false
             this.rotatingRight = false
+            this.pew = false
+
             this.velocity = {
                 x: 0,
                 y: 0,
@@ -40,6 +42,11 @@
 
             context.strokeStyle = '#fff'
             context.stroke()
+
+            //fire fricken laser beams
+            if (this.pew) {
+                this.pew = false
+            }
 
             //flame for engine
             if (this.engineOn) {
@@ -74,9 +81,18 @@
 
             //acceleration
             if (this.engineOn) {
-                this.velocity.x += (THRUST / 100) * Math.sin(this.angle)
-                this.velocity.y -= (THRUST / 100) * Math.cos(this.angle)
+                const velX =
+                    this.velocity.x + (THRUST / 100) * Math.sin(this.angle)
+                const velY =
+                    this.velocity.y - (THRUST / 100) * Math.cos(this.angle)
+                const maxSpeed = 4
+
+                velX < maxSpeed && velX > -maxSpeed && (this.velocity.x = velX)
+                velY < maxSpeed && velY > -maxSpeed && (this.velocity.y = velY)
             }
+
+            console.log(this.velocity.x, this.velocity.y)
+
             //update velocity depending on gravity
             this.velocity.y += GRAVITY / 100
         }
@@ -91,6 +107,7 @@
         if (keyCode === 37) spaceShip.rotatingLeft = isKeyDown
         if (keyCode === 39) spaceShip.rotatingRight = isKeyDown
         if (keyCode === 38) spaceShip.engineOn = isKeyDown
+        if (keyCode === 32) spaceShip.pew = isKeyDown
     }
 
     function draw() {
